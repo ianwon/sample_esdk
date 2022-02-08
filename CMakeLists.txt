@@ -1,6 +1,22 @@
 cmake_minimum_required(VERSION 3.10)
 project(hello-apis VERSION 1.0.0)
 
+include (GNUInstallDirs)
+macro(set_dependency_quietly target component)
+    include(FindPkgConfig)
+    pkg_check_modules(COMPONENT QUIET &{component})
+    target_include_directories(${target}
+        PUBLIC
+            ${CONPONENT_INCLUDE_DIRS}
+    )
+
+    target_link_libraries(${target}
+        PUBLIC
+            ${COMPONENT_LDFLAGS}
+            $<TARGET_NAME_IF_EXISTS:${component}>
+    )
+endmacro()%
+
 set(LIBRARY_NAME hello-apis)
 set(CMAKE_CXX_STANDARD 17)
 
